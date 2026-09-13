@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVA AI</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f3f3f3;
+}
+
+.app {
+    max-width: 450px;
+    height: 100vh;
+    margin: auto;
+    background: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    background: #6c4cff;
+    color: white;
+    padding: 18px;
+    text-align: center;
+}
+
+.header h2 {
+    margin: 0;
+}
+
+.header small {
+    opacity: .85;
+}
+
+#chat {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.message {
+    padding: 10px 14px;
+    margin: 8px 0;
+    border-radius: 15px;
+    max-width: 75%;
+    line-height: 1.4;
+    width: fit-content;
+}
+
+.bot {
+    background: #eeeeee;
+}
+
+.user {
+    background: #6c4cff;
+    color: white;
+    margin-left: auto;
+}
+
+.input-area {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+}
+
+input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+}
+
+button {
+    margin-left: 8px;
+    border: none;
+    background: #6c4cff;
+    color: white;
+    padding: 0 18px;
+    border-radius: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <div class="header">
+        <h2>💬 NOVA AI</h2>
+        <small>AI Assistant</small>
+    </div>
+
+    <div id="chat">
+        <div class="message bot">
+            Hi! 😊 Main NOVA AI hoon. Tum mujhse chat kar sakte ho.
+        </div>
+    </div>
+
+    <div class="input-area">
+        <input
+            id="message"
+            placeholder="Message likho..."
+            onkeydown="if(event.key === 'Enter') sendMessage()"
+        >
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+</div>
+
+<script>
+
+async function sendMessage() {
+
+    const input = document.getElementById("message");
+    const text = input.value.trim();
+
+    if (!text) return;
+
+    addMessage(text, "user");
+    input.value = "";
+
+    addMessage("⏳ Soch raha hoon...", "bot");
+
+    try {
+
+        const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: text
+            })
+        });
+
+        const data = await response.json();
+
+        const chat = document.getElementById("chat");
+        chat.lastElementChild.remove();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Server error");
+        }
+
+        addMessage(data.reply, "bot");
+
+    } catch (error) {
+
+        const chat = document.getElementById("chat");
+        chat.lastElementChild.remove();
+
+        addMessage("❌ Error: " + error.message, "bot");
+    }
+}
+
+function addMessage(text, type) {
+
+    const chat = document.getElementById("chat");
+
+    const message = document.createElement("div");
+
+    message.className = "message " + type;
+
+    message.textContent = text;
+
+    chat.appendChild(message);
+
+    chat.scrollTop = chat.scrollHeight;
+}
+
+</script>
+
+</body>
+</html>
