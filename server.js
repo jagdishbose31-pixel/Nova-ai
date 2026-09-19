@@ -6,6 +6,7 @@ app.use(express.json());
 app.use(express.static(__dirname));
 
 const API_KEY = process.env.OPENROUTER_API_KEY;
+console.log("OPENROUTER KEY LOADED:", !!API_KEY);
 
 app.post("/api/chat", async (req, res) => {
   try {
