@@ -18,6 +18,7 @@ app.post("/api/chat", async (req, res) => {
       });
     }
 
+    console.log("SENDING REQUEST TO OPENROUTER, KEY EXISTS:", !!API_KEY);
     const response = await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
       {
