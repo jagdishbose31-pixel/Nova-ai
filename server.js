@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 
 app.use(express.json());
+app.get("/api/test", (req, res) => res.json({status: "NOVA_SERVER_OK"}));
 app.use(express.static(__dirname));
 
 const API_KEY = process.env.OPENROUTER_API_KEY;
