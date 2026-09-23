@@ -6,7 +6,7 @@ app.use(express.json());
 app.get("/api/test", (req, res) => res.json({status: "NOVA_SERVER_OK"}));
 app.use(express.static(__dirname));
 
-const API_KEY = process.env.OPENROUTER_API_KEY;
+const API_KEY = process.env.OPENROUTER_API_KEY?.trim();
 console.log("OPENROUTER KEY LOADED:", !!API_KEY);
 
 app.post("/api/chat", async (req, res) => {
