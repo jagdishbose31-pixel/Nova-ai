@@ -41,6 +41,7 @@ app.post("/api/chat", async (req, res) => {
     );
 
     const data = await response.json();
+       console.log("OPENROUTER STATUS:", response.status); console.log("OPENROUTER RESPONSE:", JSON.stringify(data));
 
     if (!response.ok) {
       return res.status(response.status).json({
