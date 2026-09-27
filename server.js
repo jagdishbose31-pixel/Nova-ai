@@ -4,6 +4,7 @@ const app = express();
 
 app.use(express.json());
 app.get("/api/test", (req, res) => res.json({status: "NOVA_SERVER_OK"}));
+app.get("/api/auth-test", async (req, res) => { try { const r = await fetch("https://openrouter.ai/api/v1/models", { headers: { Authorization: `Bearer ${API_KEY}` } }); const d = await r.json(); console.log("AUTH TEST STATUS:", r.status); console.log("AUTH TEST RESPONSE:", JSON.stringify(d).slice(0,500)); res.json({status:r.status}); } catch(e) { console.error("AUTH TEST ERROR:", e.message); res.status(500).json({error:e.message}); } });
 app.use(express.static(__dirname));
 
 const API_KEY = process.env.OPENROUTER_API_KEY?.trim();
