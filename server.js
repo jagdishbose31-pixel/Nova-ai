@@ -40,7 +40,7 @@ app.get("/api/auth-test", async (req, res) => {
 
 app.get("/api/chat-test", (req, res) => {
   const body = JSON.stringify({
-    model: "openai/gpt-oss-20b:free",
+    model: "openrouter/free",
     messages: [
       {
         role: "user",
