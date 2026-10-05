@@ -1,4 +1,5 @@
 const express = require("express");
+const https = require("https");
 
 const app = express();
 
@@ -36,43 +37,60 @@ app.get("/api/auth-test", async (req, res) => {
     });
   }
 });
-app.get("/api/chat-test", async (req, res) => {
-  try {
-    const response = await fetch(
-      "https://openrouter.ai/api/v1/chat/completions",
+
+app.get("/api/chat-test", (req, res) => {
+  const body = JSON.stringify({
+    model: "openai/gpt-oss-20b:free",
+    messages: [
       {
-        method: "POST",
-        headers: {
-          "Authorization": "Bearer " + API_KEY,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          model: "openai/gpt-oss-20b:free",
-          messages: [
-            {
-              role: "user",
-              content: "Say hello"
-            }
-          ]
-        })
+        role: "user",
+        content: "Say hello"
       }
-    );
+    ]
+  });
 
-    const data = await response.json();
+  const request = https.request(
+    {
+      hostname: "openrouter.ai",
+      path: "/api/v1/chat/completions",
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + API_KEY,
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(body)
+      }
+    },
+    (response) => {
+      let data = "";
 
-    console.log("CHAT TEST STATUS:", response.status);
-    console.log(
-      "CHAT TEST RESPONSE:",
-      JSON.stringify(data).slice(0, 1000)
-    );
+      response.on("data", (chunk) => {
+        data += chunk;
+      });
 
-    res.status(response.status).json(data);
+      response.on("end", () => {
+        console.log("HTTPS TEST STATUS:", response.statusCode);
+        console.log(
+          "HTTPS TEST RESPONSE:",
+          data.slice(0, 1000)
+        );
 
-  } catch (e) {
-    console.error("CHAT TEST ERROR:", e);
-    res.status(500).json({ error: e.message });
-  }
+        res.status(response.statusCode).send(data);
+      });
+    }
+  );
+
+  request.on("error", (error) => {
+    console.error("HTTPS TEST ERROR:", error);
+
+    res.status(500).json({
+      error: error.message
+    });
+  });
+
+  request.write(body);
+  request.end();
 });
+
 app.post("/api/chat", async (req, res) => {
   try {
     const message = req.body.message;
