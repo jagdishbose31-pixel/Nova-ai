@@ -6,82 +6,173 @@
 <title>NOVA AI</title>
 
 <style>
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #f3f3f3;
+    background: #111;
 }
 
 .app {
-    max-width: 450px;
+    max-width: 480px;
     height: 100vh;
     margin: auto;
-    background: white;
+    background: #fff;
     display: flex;
     flex-direction: column;
 }
 
+/* HEADER */
 .header {
-    background: #6c4cff;
+    background: linear-gradient(135deg, #6c4cff, #9b59ff);
     color: white;
-    padding: 18px;
-    text-align: center;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-icon {
+    width: 42px;
+    height: 42px;
+    background: rgba(255,255,255,.2);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
 }
 
 .header h2 {
     margin: 0;
+    font-size: 20px;
 }
 
 .header small {
     opacity: .85;
 }
 
+.pro-btn {
+    border: none;
+    background: #fff;
+    color: #6c4cff;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+/* CHAT */
 #chat {
     flex: 1;
     padding: 15px;
     overflow-y: auto;
+    background: #f7f7fb;
 }
 
 .message {
-    padding: 10px 14px;
-    margin: 8px 0;
-    border-radius: 15px;
-    max-width: 75%;
-    line-height: 1.4;
+    padding: 11px 14px;
+    margin: 9px 0;
+    border-radius: 17px;
+    max-width: 80%;
+    line-height: 1.5;
     width: fit-content;
+    word-wrap: break-word;
 }
 
 .bot {
-    background: #eeeeee;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
 }
 
 .user {
-    background: #6c4cff;
+    background: linear-gradient(135deg, #6c4cff, #8e6cff);
     color: white;
     margin-left: auto;
 }
 
+/* INPUT */
 .input-area {
-    display: flex;
     padding: 10px;
+    background: white;
     border-top: 1px solid #ddd;
+}
+
+.input-box {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: #f3f3f7;
+    padding: 6px;
+    border-radius: 25px;
 }
 
 input {
     flex: 1;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
+    border: none;
+    background: transparent;
+    padding: 11px;
     outline: none;
+    font-size: 15px;
 }
 
-button {
-    margin-left: 8px;
+.icon-btn,
+.send-btn {
     border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.icon-btn {
+    background: #e5e5ed;
+    font-size: 18px;
+}
+
+.send-btn {
     background: #6c4cff;
     color: white;
-    padding: 0 18px;
-    border-radius: 20px;
+    font-size: 17px;
+}
+
+.listening {
+    background: #ff4d6d !important;
+    color: white;
+}
+
+/* BOTTOM */
+.bottom {
+    display: flex;
+    justify-content: space-around;
+    padding: 8px;
+    border-top: 1px solid #eee;
+    background: white;
+}
+
+.bottom button {
+    border: none;
+    background: none;
+    font-size: 12px;
+    color: #555;
+}
+
+.bottom span {
+    display: block;
+    font-size: 19px;
+}
+
+/* TYPING */
+.typing {
+    opacity: .7;
 }
 </style>
 </head>
@@ -90,87 +181,348 @@ button {
 
 <div class="app">
 
+    <!-- HEADER -->
     <div class="header">
-        <h2>💬 NOVA AI</h2>
-        <small>AI Assistant</small>
-    </div>
 
-    <div id="chat">
-        <div class="message bot">
-            Hi! 😊 Main NOVA AI hoon. Tum mujhse chat kar sakte ho.
+        <div class="logo">
+            <div class="logo-icon">✦</div>
+
+            <div>
+                <h2>NOVA AI</h2>
+                <small>Your AI Assistant</small>
+            </div>
         </div>
+
+        <button class="pro-btn" onclick="showPro()">
+            ⭐ PRO
+        </button>
+
     </div>
 
+    <!-- CHAT -->
+    <div id="chat"></div>
+
+    <!-- INPUT -->
     <div class="input-area">
-        <input
-            id="message"
-            placeholder="Message likho..."
-            onkeydown="if(event.key === 'Enter') sendMessage()"
-        >
-        <button onclick="sendMessage()">Send</button>
+
+        <div class="input-box">
+
+            <input
+                id="message"
+                placeholder="NOVA se kuch bhi pucho..."
+                autocomplete="off"
+                onkeydown="if(event.key==='Enter') sendMessage()"
+            >
+
+            <button
+                id="micBtn"
+                class="icon-btn"
+                onclick="startVoice()"
+            >
+                🎤
+            </button>
+
+            <button
+                class="send-btn"
+                onclick="sendMessage()"
+            >
+                ➤
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- BOTTOM -->
+    <div class="bottom">
+
+        <button onclick="newChat()">
+            <span>＋</span>
+            New Chat
+        </button>
+
+        <button onclick="showHistory()">
+            <span>🕘</span>
+            History
+        </button>
+
+        <button onclick="clearChat()">
+            <span>🗑️</span>
+            Clear
+        </button>
+
     </div>
 
 </div>
 
 <script>
 
+const chat = document.getElementById("chat");
+const input = document.getElementById("message");
+
+let history = JSON.parse(
+    localStorage.getItem("nova_history") || "[]"
+);
+
+/* START */
+
+if (history.length === 0) {
+
+    addMessage(
+        "Hi! 😊 Main NOVA AI hoon. Tum mujhse kuch bhi puch sakte ho.",
+        "bot",
+        false
+    );
+
+} else {
+
+    history.forEach(item => {
+        addMessage(item.text, item.type, false);
+    });
+
+}
+
+
+/* SEND MESSAGE */
+
 async function sendMessage() {
 
-    const input = document.getElementById("message");
     const text = input.value.trim();
 
     if (!text) return;
 
     addMessage(text, "user");
+
     input.value = "";
 
-    addMessage("⏳ Soch raha hoon...", "bot");
+    const loading = addMessage(
+        "⏳ NOVA soch raha hai...",
+        "bot"
+    );
 
     try {
 
         const response = await fetch("/api/chat", {
+
             method: "POST",
+
             headers: {
                 "Content-Type": "application/json"
             },
+
             body: JSON.stringify({
                 message: text
             })
+
         });
 
         const data = await response.json();
 
-        const chat = document.getElementById("chat");
-        chat.lastElementChild.remove();
+        loading.remove();
 
         if (!response.ok) {
-            throw new Error(data.error || "Server error");
+            throw new Error(
+                data.error || "Server error"
+            );
         }
 
-        addMessage(data.reply, "bot");
+        addMessage(
+            data.reply,
+            "bot"
+        );
 
     } catch (error) {
 
-        const chat = document.getElementById("chat");
-        chat.lastElementChild.remove();
+        loading.remove();
 
-        addMessage("❌ Error: " + error.message, "bot");
+        addMessage(
+            "❌ Error: " + error.message,
+            "bot"
+        );
+
     }
+
 }
 
-function addMessage(text, type) {
 
-    const chat = document.getElementById("chat");
+/* ADD MESSAGE */
+
+function addMessage(text, type, save = true) {
 
     const message = document.createElement("div");
 
-    message.className = "message " + type;
+    message.className =
+        "message " + type;
 
     message.textContent = text;
 
     chat.appendChild(message);
 
-    chat.scrollTop = chat.scrollHeight;
+    chat.scrollTop =
+        chat.scrollHeight;
+
+    if (save) {
+
+        history.push({
+            text: text,
+            type: type
+        });
+
+        localStorage.setItem(
+            "nova_history",
+            JSON.stringify(history)
+        );
+
+    }
+
+    return message;
+}
+
+
+/* NEW CHAT */
+
+function newChat() {
+
+    chat.innerHTML = "";
+
+    history = [];
+
+    localStorage.removeItem(
+        "nova_history"
+    );
+
+    addMessage(
+        "👋 New chat started! NOVA AI ready hai.",
+        "bot"
+    );
+
+}
+
+
+/* CLEAR */
+
+function clearChat() {
+
+    if (!confirm(
+        "Kya tum chat history clear karna chahte ho?"
+    )) return;
+
+    chat.innerHTML = "";
+
+    history = [];
+
+    localStorage.removeItem(
+        "nova_history"
+    );
+
+    addMessage(
+        "🧹 Chat clear ho gayi. Main NOVA AI hoon, pucho!",
+        "bot"
+    );
+
+}
+
+
+/* HISTORY */
+
+function showHistory() {
+
+    if (history.length === 0) {
+
+        alert(
+            "Abhi koi chat history nahi hai."
+        );
+
+        return;
+
+    }
+
+    alert(
+        "NOVA AI me " +
+        history.length +
+        " messages saved hain."
+    );
+
+}
+
+
+/* MICROPHONE */
+
+function startVoice() {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+
+        alert(
+            "Tumhare browser me voice input supported nahi hai."
+        );
+
+        return;
+
+    }
+
+    const recognition =
+        new SpeechRecognition();
+
+    recognition.lang = "hi-IN";
+
+    recognition.continuous = false;
+
+    recognition.interimResults = false;
+
+    const mic =
+        document.getElementById("micBtn");
+
+    mic.classList.add("listening");
+
+    recognition.start();
+
+    recognition.onresult = function(event) {
+
+        const text =
+            event.results[0][0].transcript;
+
+        input.value = text;
+
+        sendMessage();
+
+    };
+
+    recognition.onerror = function() {
+
+        alert(
+            "Mic se voice lene me problem hui."
+        );
+
+    };
+
+    recognition.onend = function() {
+
+        mic.classList.remove(
+            "listening"
+        );
+
+    };
+
+}
+
+
+/* PRO */
+
+function showPro() {
+
+    alert(
+        "⭐ NOVA AI PRO\n\n" +
+        "PRO features jaldi aa rahe hain!\n\n" +
+        "• More AI usage\n" +
+        "• Chat history\n" +
+        "• Advanced features\n" +
+        "• Faster responses"
+    );
+
 }
 
 </script>
