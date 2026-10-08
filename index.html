@@ -6,524 +6,393 @@
 <title>NOVA AI</title>
 
 <style>
-* {
-    box-sizing: border-box;
-}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#111}
+.app{max-width:480px;height:100vh;margin:auto;background:#fff;display:flex;flex-direction:column}
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #111;
-}
+#authScreen{height:100vh;padding:35px 25px;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(135deg,#6c4cff,#9b59ff);color:white}
+#authScreen h1{text-align:center;font-size:32px;margin:0 0 10px}
+#authScreen p{text-align:center;margin-bottom:30px;opacity:.9}
+.authInput{width:100%;padding:14px;margin:7px 0;border:0;border-radius:12px;font-size:15px;outline:none}
+.authBtn{width:100%;padding:14px;margin-top:10px;border:0;border-radius:12px;font-weight:bold;font-size:16px;color:#6c4cff;background:white}
+#authMsg{text-align:center;margin-top:15px}
 
-.app {
-    max-width: 480px;
-    height: 100vh;
-    margin: auto;
-    background: #fff;
-    display: flex;
-    flex-direction: column;
-}
+#mainApp{display:none;height:100%;flex-direction:column}
+.header{background:linear-gradient(135deg,#6c4cff,#9b59ff);color:white;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:42px;height:42px;background:rgba(255,255,255,.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.header h2{margin:0;font-size:20px}
+.header small{opacity:.85}
+.pro-btn,.logout-btn{border:0;background:#fff;color:#6c4cff;padding:7px 10px;border-radius:20px;font-weight:bold}
+.logout-btn{font-size:11px;margin-top:4px}
 
-/* HEADER */
-.header {
-    background: linear-gradient(135deg, #6c4cff, #9b59ff);
-    color: white;
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
+#chat{flex:1;padding:15px;overflow-y:auto;background:#f7f7fb}
+.message{padding:11px 14px;margin:9px 0;border-radius:17px;max-width:80%;line-height:1.5;width:fit-content;word-wrap:break-word}
+.bot{background:white;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.user{background:linear-gradient(135deg,#6c4cff,#8e6cff);color:white;margin-left:auto}
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+.input-area{padding:10px;background:white;border-top:1px solid #ddd}
+.input-box{display:flex;align-items:center;gap:7px;background:#f3f3f7;padding:6px;border-radius:25px}
+input{flex:1;border:0;background:transparent;padding:11px;outline:none;font-size:15px}
+.icon-btn,.send-btn{border:0;width:40px;height:40px;border-radius:50%;cursor:pointer}
+.icon-btn{background:#e5e5ed;font-size:18px}
+.send-btn{background:#6c4cff;color:white;font-size:17px}
+.listening{background:#ff4d6d!important;color:white}
 
-.logo-icon {
-    width: 42px;
-    height: 42px;
-    background: rgba(255,255,255,.2);
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-}
-
-.header h2 {
-    margin: 0;
-    font-size: 20px;
-}
-
-.header small {
-    opacity: .85;
-}
-
-.pro-btn {
-    border: none;
-    background: #fff;
-    color: #6c4cff;
-    padding: 8px 12px;
-    border-radius: 20px;
-    font-weight: bold;
-}
-
-/* CHAT */
-#chat {
-    flex: 1;
-    padding: 15px;
-    overflow-y: auto;
-    background: #f7f7fb;
-}
-
-.message {
-    padding: 11px 14px;
-    margin: 9px 0;
-    border-radius: 17px;
-    max-width: 80%;
-    line-height: 1.5;
-    width: fit-content;
-    word-wrap: break-word;
-}
-
-.bot {
-    background: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,.06);
-}
-
-.user {
-    background: linear-gradient(135deg, #6c4cff, #8e6cff);
-    color: white;
-    margin-left: auto;
-}
-
-/* INPUT */
-.input-area {
-    padding: 10px;
-    background: white;
-    border-top: 1px solid #ddd;
-}
-
-.input-box {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    background: #f3f3f7;
-    padding: 6px;
-    border-radius: 25px;
-}
-
-input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    padding: 11px;
-    outline: none;
-    font-size: 15px;
-}
-
-.icon-btn,
-.send-btn {
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-}
-
-.icon-btn {
-    background: #e5e5ed;
-    font-size: 18px;
-}
-
-.send-btn {
-    background: #6c4cff;
-    color: white;
-    font-size: 17px;
-}
-
-.listening {
-    background: #ff4d6d !important;
-    color: white;
-}
-
-/* BOTTOM */
-.bottom {
-    display: flex;
-    justify-content: space-around;
-    padding: 8px;
-    border-top: 1px solid #eee;
-    background: white;
-}
-
-.bottom button {
-    border: none;
-    background: none;
-    font-size: 12px;
-    color: #555;
-}
-
-.bottom span {
-    display: block;
-    font-size: 19px;
-}
-
-/* TYPING */
-.typing {
-    opacity: .7;
-}
+.bottom{display:flex;justify-content:space-around;padding:8px;border-top:1px solid #eee;background:white}
+.bottom button{border:0;background:none;font-size:12px;color:#555}
+.bottom span{display:block;font-size:19px}
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<!-- LOGIN / SIGNUP -->
+<div id="authScreen">
+<h1>✦ NOVA AI</h1>
+<p>Apna account banao aur NOVA AI use karo</p>
 
-    <!-- HEADER -->
-    <div class="header">
+<input id="email" class="authInput" type="email" placeholder="Email">
+<input id="password" class="authInput" type="password" placeholder="Password">
 
-        <div class="logo">
-            <div class="logo-icon">✦</div>
+<button class="authBtn" onclick="signup()">Create Account</button>
+<button class="authBtn" onclick="login()">Login</button>
 
-            <div>
-                <h2>NOVA AI</h2>
-                <small>Your AI Assistant</small>
-            </div>
-        </div>
+<div id="authMsg"></div>
+</div>
 
-        <button class="pro-btn" onclick="showPro()">
-            ⭐ PRO
-        </button>
 
-    </div>
+<!-- MAIN APP -->
+<div id="mainApp" class="app">
 
-    <!-- CHAT -->
-    <div id="chat"></div>
+<div class="header">
+<div class="logo">
+<div class="logo-icon">✦</div>
+<div>
+<h2>NOVA AI</h2>
+<small>Your AI Assistant</small>
+</div>
+</div>
 
-    <!-- INPUT -->
-    <div class="input-area">
+<div>
+<button class="pro-btn" onclick="showPro()">⭐ PRO</button>
+<br>
+<button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+</div>
 
-        <div class="input-box">
+<div id="chat"></div>
 
-            <input
-                id="message"
-                placeholder="NOVA se kuch bhi pucho..."
-                autocomplete="off"
-                onkeydown="if(event.key==='Enter') sendMessage()"
-            >
+<div class="input-area">
+<div class="input-box">
 
-            <button
-                id="micBtn"
-                class="icon-btn"
-                onclick="startVoice()"
-            >
-                🎤
-            </button>
+<input id="message"
+placeholder="NOVA se kuch bhi pucho..."
+autocomplete="off"
+onkeydown="if(event.key==='Enter')sendMessage()">
 
-            <button
-                class="send-btn"
-                onclick="sendMessage()"
-            >
-                ➤
-            </button>
+<button id="micBtn" class="icon-btn" onclick="startVoice()">🎤</button>
 
-        </div>
+<button class="send-btn" onclick="sendMessage()">➤</button>
 
-    </div>
+</div>
+</div>
 
-    <!-- BOTTOM -->
-    <div class="bottom">
-
-        <button onclick="newChat()">
-            <span>＋</span>
-            New Chat
-        </button>
-
-        <button onclick="showHistory()">
-            <span>🕘</span>
-            History
-        </button>
-
-        <button onclick="clearChat()">
-            <span>🗑️</span>
-            Clear
-        </button>
-
-    </div>
+<div class="bottom">
+<button onclick="newChat()"><span>＋</span>New Chat</button>
+<button onclick="showHistory()"><span>🕘</span>History</button>
+<button onclick="clearChat()"><span>🗑️</span>Clear</button>
+</div>
 
 </div>
 
-<script>
 
-const chat = document.getElementById("chat");
-const input = document.getElementById("message");
+<script type="module">
 
-let history = JSON.parse(
-    localStorage.getItem("nova_history") || "[]"
+import {initializeApp}
+from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+
+import {
+getAuth,
+createUserWithEmailAndPassword,
+signInWithEmailAndPassword,
+signOut,
+onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+
+const firebaseConfig = {
+apiKey:"AIzaSyALCoenxA0FPBkKONsu8i-R3Lxdo5_TMwg",
+authDomain:"nova-ai-ec9ca.firebaseapp.com",
+projectId:"nova-ai-ec9ca",
+storageBucket:"nova-ai-ec9ca.firebasestorage.app",
+messagingSenderId:"919732031996",
+appId:"1:919732031996:web:f268e37629a509c60fa279",
+measurementId:"G-FHZM5K7FYL"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const authScreen = document.getElementById("authScreen");
+const mainApp = document.getElementById("mainApp");
+const authMsg = document.getElementById("authMsg");
+
+
+window.signup = async function(){
+
+const email=document.getElementById("email").value.trim();
+const password=document.getElementById("password").value;
+
+if(!email || !password){
+authMsg.textContent="Email aur password dono bharo.";
+return;
+}
+
+try{
+await createUserWithEmailAndPassword(auth,email,password);
+authMsg.textContent="Account ban gaya ✅";
+}catch(e){
+authMsg.textContent="❌ "+e.message;
+}
+
+};
+
+
+window.login = async function(){
+
+const email=document.getElementById("email").value.trim();
+const password=document.getElementById("password").value;
+
+try{
+await signInWithEmailAndPassword(auth,email,password);
+}catch(e){
+authMsg.textContent="❌ Email ya password galat hai.";
+}
+
+};
+
+
+window.logout = async function(){
+await signOut(auth);
+};
+
+
+onAuthStateChanged(auth,(user)=>{
+
+if(user){
+
+authScreen.style.display="none";
+mainApp.style.display="flex";
+startChat();
+
+}else{
+
+authScreen.style.display="flex";
+mainApp.style.display="none";
+
+}
+
+});
+
+
+const chat=document.getElementById("chat");
+const input=document.getElementById("message");
+
+let history=[];
+
+
+function startChat(){
+
+const key="nova_history_"+auth.currentUser.uid;
+
+history=JSON.parse(localStorage.getItem(key)||"[]");
+
+chat.innerHTML="";
+
+if(history.length===0){
+
+addMessage(
+"Hi! 😊 Main NOVA AI hoon. Tum mujhse kuch bhi puch sakte ho.",
+"bot",
+false
 );
 
-/* START */
+}else{
 
-if (history.length === 0) {
+history.forEach(item=>{
+addMessage(item.text,item.type,false);
+});
 
-    addMessage(
-        "Hi! 😊 Main NOVA AI hoon. Tum mujhse kuch bhi puch sakte ho.",
-        "bot",
-        false
-    );
-
-} else {
-
-    history.forEach(item => {
-        addMessage(item.text, item.type, false);
-    });
+}
 
 }
 
 
-/* SEND MESSAGE */
+async function sendMessage(){
 
-async function sendMessage() {
+const text=input.value.trim();
 
-    const text = input.value.trim();
+if(!text)return;
 
-    if (!text) return;
+addMessage(text,"user");
+input.value="";
 
-    addMessage(text, "user");
+const loading=addMessage("⏳ NOVA soch raha hai...","bot");
 
-    input.value = "";
+try{
 
-    const loading = addMessage(
-        "⏳ NOVA soch raha hai...",
-        "bot"
-    );
+const response=await fetch("/api/chat",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({message:text})
+});
 
-    try {
+const data=await response.json();
 
-        const response = await fetch("/api/chat", {
+loading.remove();
 
-            method: "POST",
+if(!response.ok){
+throw new Error(data.error||"Server error");
+}
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+addMessage(data.reply,"bot");
 
-            body: JSON.stringify({
-                message: text
-            })
+}catch(error){
 
-        });
+loading.remove();
 
-        const data = await response.json();
+addMessage("❌ Error: "+error.message,"bot");
 
-        loading.remove();
-
-        if (!response.ok) {
-            throw new Error(
-                data.error || "Server error"
-            );
-        }
-
-        addMessage(
-            data.reply,
-            "bot"
-        );
-
-    } catch (error) {
-
-        loading.remove();
-
-        addMessage(
-            "❌ Error: " + error.message,
-            "bot"
-        );
-
-    }
+}
 
 }
 
 
-/* ADD MESSAGE */
+function addMessage(text,type,save=true){
 
-function addMessage(text, type, save = true) {
+const message=document.createElement("div");
 
-    const message = document.createElement("div");
+message.className="message "+type;
+message.textContent=text;
 
-    message.className =
-        "message " + type;
+chat.appendChild(message);
+chat.scrollTop=chat.scrollHeight;
 
-    message.textContent = text;
+if(save){
 
-    chat.appendChild(message);
+history.push({
+text:text,
+type:type
+});
 
-    chat.scrollTop =
-        chat.scrollHeight;
+const key="nova_history_"+auth.currentUser.uid;
 
-    if (save) {
+localStorage.setItem(key,JSON.stringify(history));
 
-        history.push({
-            text: text,
-            type: type
-        });
-
-        localStorage.setItem(
-            "nova_history",
-            JSON.stringify(history)
-        );
-
-    }
-
-    return message;
 }
 
-
-/* NEW CHAT */
-
-function newChat() {
-
-    chat.innerHTML = "";
-
-    history = [];
-
-    localStorage.removeItem(
-        "nova_history"
-    );
-
-    addMessage(
-        "👋 New chat started! NOVA AI ready hai.",
-        "bot"
-    );
+return message;
 
 }
 
 
-/* CLEAR */
+window.newChat=function(){
 
-function clearChat() {
+chat.innerHTML="";
+history=[];
 
-    if (!confirm(
-        "Kya tum chat history clear karna chahte ho?"
-    )) return;
+const key="nova_history_"+auth.currentUser.uid;
 
-    chat.innerHTML = "";
+localStorage.removeItem(key);
 
-    history = [];
+addMessage("👋 New chat started! NOVA AI ready hai.","bot");
 
-    localStorage.removeItem(
-        "nova_history"
-    );
+};
 
-    addMessage(
-        "🧹 Chat clear ho gayi. Main NOVA AI hoon, pucho!",
-        "bot"
-    );
 
+window.clearChat=function(){
+
+if(!confirm("Kya tum chat history clear karna chahte ho?"))return;
+
+chat.innerHTML="";
+history=[];
+
+const key="nova_history_"+auth.currentUser.uid;
+
+localStorage.removeItem(key);
+
+addMessage("🧹 Chat clear ho gayi. Main NOVA AI hoon, pucho!","bot");
+
+};
+
+
+window.showHistory=function(){
+
+if(history.length===0){
+alert("Abhi koi chat history nahi hai.");
+return;
 }
 
+alert("NOVA AI me "+history.length+" messages saved hain.");
 
-/* HISTORY */
+};
 
-function showHistory() {
 
-    if (history.length === 0) {
+window.startVoice=function(){
 
-        alert(
-            "Abhi koi chat history nahi hai."
-        );
+const SpeechRecognition=
+window.SpeechRecognition||
+window.webkitSpeechRecognition;
 
-        return;
-
-    }
-
-    alert(
-        "NOVA AI me " +
-        history.length +
-        " messages saved hain."
-    );
-
+if(!SpeechRecognition){
+alert("Voice input supported nahi hai.");
+return;
 }
 
+const recognition=new SpeechRecognition();
 
-/* MICROPHONE */
+recognition.lang="hi-IN";
+recognition.continuous=false;
+recognition.interimResults=false;
 
-function startVoice() {
+const mic=document.getElementById("micBtn");
 
-    const SpeechRecognition =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
+mic.classList.add("listening");
 
-    if (!SpeechRecognition) {
+recognition.start();
 
-        alert(
-            "Tumhare browser me voice input supported nahi hai."
-        );
+recognition.onresult=function(event){
 
-        return;
+input.value=event.results[0][0].transcript;
+sendMessage();
 
-    }
+};
 
-    const recognition =
-        new SpeechRecognition();
+recognition.onerror=function(){
+alert("Mic se voice lene me problem hui.");
+};
 
-    recognition.lang = "hi-IN";
+recognition.onend=function(){
+mic.classList.remove("listening");
+};
 
-    recognition.continuous = false;
-
-    recognition.interimResults = false;
-
-    const mic =
-        document.getElementById("micBtn");
-
-    mic.classList.add("listening");
-
-    recognition.start();
-
-    recognition.onresult = function(event) {
-
-        const text =
-            event.results[0][0].transcript;
-
-        input.value = text;
-
-        sendMessage();
-
-    };
-
-    recognition.onerror = function() {
-
-        alert(
-            "Mic se voice lene me problem hui."
-        );
-
-    };
-
-    recognition.onend = function() {
-
-        mic.classList.remove(
-            "listening"
-        );
-
-    };
-
-}
+};
 
 
-/* PRO */
+window.showPro=function(){
 
-function showPro() {
+alert(
+"⭐ NOVA AI PRO\n\n"+
+"PRO features jaldi aa rahe hain!\n\n"+
+"• More AI usage\n"+
+"• Chat history\n"+
+"• Advanced features\n"+
+"• Faster responses"
+);
 
-    alert(
-        "⭐ NOVA AI PRO\n\n" +
-        "PRO features jaldi aa rahe hain!\n\n" +
-        "• More AI usage\n" +
-        "• Chat history\n" +
-        "• Advanced features\n" +
-        "• Faster responses"
-    );
-
-}
+};
 
 </script>
 
