@@ -40,7 +40,7 @@ app.get("/api/auth-test", async (req, res) => {
 
 app.get("/api/chat-test", (req, res) => {
   const body = JSON.stringify({
-    model: "openrouter/free",
+    model: "nvidia/nemotron-3.5-lightning:free",
     messages: [
       {
         role: "user",
@@ -127,7 +127,7 @@ app.post("/api/chat", async (req, res) => {
         },
 
         body: JSON.stringify({
-          model: "openrouter/free",
+          model: "nvidia/nemotron-3.5-lightning:free",
           messages: [
             {
               role: "user",
