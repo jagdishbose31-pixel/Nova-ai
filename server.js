@@ -1,4 +1,5 @@
 const express = require("express");
+const https = require("https");
 
 const app = express();
 
@@ -37,6 +38,59 @@ app.get("/api/auth-test", async (req, res) => {
   }
 });
 
+app.get("/api/chat-test", (req, res) => {
+  const body = JSON.stringify({
+    model: "openrouter/free",
+    messages: [
+      {
+        role: "user",
+        content: "Say hello"
+      }
+    ]
+  });
+
+  const request = https.request(
+    {
+      hostname: "openrouter.ai",
+      path: "/api/v1/chat/completions",
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + API_KEY,
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(body)
+      }
+    },
+    (response) => {
+      let data = "";
+
+      response.on("data", (chunk) => {
+        data += chunk;
+      });
+
+      response.on("end", () => {
+        console.log("HTTPS TEST STATUS:", response.statusCode);
+        console.log(
+          "HTTPS TEST RESPONSE:",
+          data.slice(0, 1000)
+        );
+
+        res.status(response.statusCode).send(data);
+      });
+    }
+  );
+
+  request.on("error", (error) => {
+    console.error("HTTPS TEST ERROR:", error);
+
+    res.status(500).json({
+      error: error.message
+    });
+  });
+
+  request.write(body);
+  request.end();
+});
+
 app.post("/api/chat", async (req, res) => {
   try {
     const message = req.body.message;
@@ -73,7 +127,7 @@ app.post("/api/chat", async (req, res) => {
         },
 
         body: JSON.stringify({
-          model: "openai/gpt-oss-20b:free",
+          model: "openrouter/free",
           messages: [
             {
               role: "user",
